@@ -1,444 +1,1126 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Сколько клиентов вы теряете на Avito?</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-:root {
-  --c1: #0052CC;
-  --c2: #00C6FB;
-  --teal: #00B37E;
-  --teal-d: #007A54;
-  --red: #FF4D4F;
-  --bg: #EFF3FF;
-  --card: #ffffff;
-  --text: #0A0F24;
-  --text2: #4B5575;
-  --text3: #9BA3C0;
-  --border: rgba(0,82,204,.13);
-  --shadow: 0 4px 24px rgba(0,82,204,.10);
-  --shadow-lg: 0 12px 48px rgba(0,82,204,.18);
-  --r: 16px;
-  --r-lg: 24px;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Golos Text',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Сколько денег вы не зарабатываете без Avito?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700&family=Golos+Text:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --c1: #0052CC;
+      --c2: #00C6FB;
+      --teal: #00B37E;
+      --teal-d: #007A54;
+      --red: #FF4D4F;
+      --bg: #EFF3FF;
+      --card: #ffffff;
+      --text: #0A0F24;
+      --text2: #4B5575;
+      --text3: #9BA3C0;
+      --border: rgba(0, 82, 204, .13);
+      --shadow: 0 4px 24px rgba(0, 82, 204, .10);
+      --shadow-lg: 0 12px 48px rgba(0, 82, 204, .18);
+      --r: 16px;
+      --r-lg: 24px;
+    }
 
-.mesh{position:fixed;inset:0;z-index:0;background:
-  radial-gradient(ellipse 80% 60% at 10% 0%,rgba(0,198,251,.18) 0%,transparent 60%),
-  radial-gradient(ellipse 60% 50% at 90% 10%,rgba(0,82,204,.13) 0%,transparent 55%),
-  radial-gradient(ellipse 70% 60% at 50% 100%,rgba(0,179,126,.10) 0%,transparent 60%),
-  #EFF3FF;pointer-events:none}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
 
-.page{position:relative;z-index:1}
+    body {
+      font-family: 'Golos Text', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden
+    }
 
-/* SCREENS */
-.screen{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1.25rem}
-.screen.active{display:flex;animation:fadeUp .45s cubic-bezier(.22,1,.36,1) both}
-.quiz-screen{display:none;min-height:100vh;flex-direction:column}
-.quiz-screen.active{display:flex;animation:fadeUp .4s cubic-bezier(.22,1,.36,1) both}
-@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+    .mesh {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 10% 0%, rgba(0, 198, 251, .18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 90% 10%, rgba(0, 82, 204, .13) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 60% at 50% 100%, rgba(0, 179, 126, .10) 0%, transparent 60%),
+        #EFF3FF;
+      pointer-events: none
+    }
 
-/* ── LANDING ── */
-.lp-inner{max-width:680px;width:100%;text-align:center}
-.logo-badge{display:inline-flex;align-items:center;gap:8px;background:white;border:1.5px solid var(--border);border-radius:40px;padding:6px 16px 6px 8px;font-size:13px;color:var(--text2);font-weight:500;margin-bottom:2.5rem;box-shadow:var(--shadow)}
-.logo-dot{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c2));display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700}
-.lp-title{font-family:'Unbounded',sans-serif;font-size:clamp(26px,5vw,46px);font-weight:700;line-height:1.15;margin-bottom:1.25rem;letter-spacing:-.02em}
-.lp-title span{background:linear-gradient(90deg,var(--c1),var(--c2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.lp-sub{font-size:17px;color:var(--text2);line-height:1.6;margin-bottom:2.5rem;max-width:480px;margin-left:auto;margin-right:auto}
-.stat-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:2.5rem}
-@media(max-width:560px){.stat-cards{grid-template-columns:1fr}.opts-grid{grid-template-columns:1fr}}
-.sc{background:white;border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.1rem .9rem;text-align:left;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s}
-.sc:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
-.sc-num{font-family:'Unbounded',sans-serif;font-size:21px;font-weight:700;color:var(--c1);line-height:1.1;margin-bottom:.35rem}
-.sc-desc{font-size:12px;color:var(--text2);line-height:1.45}
-.sc-desc b{color:var(--text);font-weight:600}
-.sc-src{font-size:10px;color:var(--text3);margin-top:.5rem}
-.start-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--c1) 0%,#0066FF 100%);color:#fff;border:none;border-radius:14px;padding:18px 40px;font-size:17px;font-weight:600;font-family:'Golos Text',sans-serif;cursor:pointer;box-shadow:0 8px 32px rgba(0,82,204,.35);transition:transform .15s,box-shadow .15s;letter-spacing:-.01em}
-.start-btn:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,82,204,.45)}
-.start-btn .arrow{width:28px;height:28px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;transition:transform .2s}
-.start-btn:hover .arrow{transform:translateX(3px)}
-.lp-note{font-size:12px;color:var(--text3);margin-top:1rem}
+    .page {
+      position: relative;
+      z-index: 1
+    }
 
-/* ── QUIZ HEADER ── */
-.qheader{position:sticky;top:0;z-index:10;background:rgba(239,243,255,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:.9rem 1.5rem}
-.qheader-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;gap:1rem}
-.step-counter{font-family:'Unbounded',sans-serif;font-size:13px;font-weight:600;color:var(--c1);white-space:nowrap;flex-shrink:0}
-.progress-track{flex:1;height:6px;background:rgba(0,82,204,.12);border-radius:3px;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--c1),var(--c2));border-radius:3px;transition:width .5s cubic-bezier(.22,1,.36,1)}
+    /* SCREENS */
+    .screen {
+      display: none;
+      min-height: 100vh;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.25rem
+    }
 
-.qbody{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:2.5rem 1.25rem 3rem}
-.qbody-inner{max-width:720px;width:100%}
+    .screen.active {
+      display: flex;
+      animation: fadeUp .45s cubic-bezier(.22, 1, .36, 1) both
+    }
 
-.step-label{font-size:12px;font-weight:600;color:var(--c1);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem}
-.step-q{font-family:'Unbounded',sans-serif;font-size:clamp(19px,3.5vw,26px);font-weight:600;line-height:1.25;margin-bottom:1.75rem;color:var(--text);letter-spacing:-.02em}
+    .quiz-screen {
+      display: none;
+      min-height: 100vh;
+      flex-direction: column
+    }
 
-/* GRID OPTIONS (step 1) */
-.opts-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.opt{background:white;border:2px solid var(--border);border-radius:var(--r);padding:1.1rem 1rem 1rem;cursor:pointer;text-align:left;transition:all .18s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden}
-.opt:hover{border-color:rgba(0,82,204,.35);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,82,204,.13)}
-.opt.sel{border-color:var(--c1);box-shadow:0 0 0 3px rgba(0,82,204,.14),0 8px 28px rgba(0,82,204,.18)}
-.opt-check{position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:50%;border:2px solid var(--border);background:white;display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent;transition:all .18s;font-weight:700}
-.opt.sel .opt-check{background:var(--c1);border-color:var(--c1);color:white}
-.opt-icon{font-size:26px;margin-bottom:.6rem;display:block}
-.opt-title{font-size:14px;font-weight:600;color:var(--text);line-height:1.3;padding-right:28px}
-.opt-sub{font-size:12px;color:var(--text2);margin-top:.3rem;line-height:1.4}
+    .quiz-screen.active {
+      display: flex;
+      animation: fadeUp .4s cubic-bezier(.22, 1, .36, 1) both
+    }
 
-/* LIST OPTIONS (steps 2,3) */
-.opts-list{display:flex;flex-direction:column;gap:10px}
-.opt-row{background:white;border:2px solid var(--border);border-radius:var(--r);padding:1rem 1.1rem;cursor:pointer;text-align:left;transition:all .18s cubic-bezier(.22,1,.36,1);display:flex;align-items:center;gap:1rem}
-.opt-row:hover{border-color:rgba(0,82,204,.35);transform:translateX(4px);box-shadow:0 6px 20px rgba(0,82,204,.1)}
-.opt-row.sel{border-color:var(--c1);box-shadow:0 0 0 3px rgba(0,82,204,.14)}
-.opt-row-icon{width:42px;height:42px;border-radius:12px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;transition:background .18s}
-.opt-row.sel .opt-row-icon{background:linear-gradient(135deg,rgba(0,82,204,.08),rgba(0,198,251,.08))}
-.opt-row-txt{flex:1}
-.opt-row-title{font-size:15px;font-weight:600;color:var(--text)}
-.opt-row-sub{font-size:12px;color:var(--text2);margin-top:2px}
-.opt-row-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);background:white;display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent;transition:all .18s;font-weight:700;flex-shrink:0}
-.opt-row.sel .opt-row-check{background:var(--c1);border-color:var(--c1);color:white}
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(28px)
+      }
 
-/* REACTION */
-.reaction{margin-top:1.25rem;background:linear-gradient(135deg,rgba(0,82,204,.05),rgba(0,198,251,.07));border:1.5px solid rgba(0,82,204,.15);border-radius:var(--r);padding:1.1rem 1.25rem;font-size:14px;color:var(--text2);line-height:1.65;display:none}
-.reaction.show{display:block;animation:fadeUp .3s both}
-.reaction-label{font-size:11px;font-weight:600;color:var(--c1);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;display:block}
-.reaction-big{font-family:'Unbounded',sans-serif;font-size:clamp(20px,4vw,28px);font-weight:700;color:var(--c1);display:block;margin:.4rem 0 .3rem;line-height:1.1}
-.reaction p{margin-top:.3rem}
-.reaction-src{font-size:10px;color:var(--text3);margin-top:.6rem;display:block}
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
 
-/* NEXT BUTTON */
-.next-wrap{margin-top:1.75rem}
-.next-btn{display:none;align-items:center;gap:10px;background:linear-gradient(135deg,var(--c1),#0066FF);color:#fff;border:none;border-radius:12px;padding:14px 28px;font-size:15px;font-weight:600;font-family:'Golos Text',sans-serif;cursor:pointer;box-shadow:0 6px 24px rgba(0,82,204,.3);transition:transform .15s,box-shadow .15s;animation:fadeUp .3s both}
-.next-btn.show{display:inline-flex}
-.next-btn:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,82,204,.4)}
-.next-btn .arr{width:24px;height:24px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;transition:transform .2s}
-.next-btn:hover .arr{transform:translateX(3px)}
+    /* ── LANDING ── */
+    .lp-inner {
+      max-width: 680px;
+      width: 100%;
+      text-align: center
+    }
 
-/* STEP 4 CONTACT */
-.contact-box{background:white;border:1px solid var(--border);border-radius:var(--r-lg);padding:2rem;box-shadow:var(--shadow)}
-.channel-group{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:1.5rem}
-.ch-btn{display:inline-flex;align-items:center;gap:8px;background:var(--bg);border:2px solid var(--border);border-radius:10px;padding:10px 18px;font-size:14px;font-weight:600;font-family:'Golos Text',sans-serif;color:var(--text2);cursor:pointer;transition:all .15s}
-.ch-btn:hover{border-color:var(--c1);color:var(--c1);background:rgba(0,82,204,.05)}
-.ch-btn.sel{border-color:var(--c1);color:var(--c1);background:rgba(0,82,204,.08)}
-.field{margin-bottom:1rem}
-.field label{display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.06em}
-.field input{width:100%;background:var(--bg);border:2px solid var(--border);border-radius:10px;padding:13px 16px;font-size:15px;color:var(--text);font-family:'Golos Text',sans-serif;outline:none;transition:border-color .15s,box-shadow .15s}
-.field input:focus{border-color:var(--c1);box-shadow:0 0 0 4px rgba(0,82,204,.1);background:white}
-.field input::placeholder{color:var(--text3)}
-.submit-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,var(--teal),#00D68F);color:#fff;border:none;border-radius:12px;padding:16px;font-size:16px;font-weight:700;font-family:'Golos Text',sans-serif;cursor:pointer;box-shadow:0 8px 28px rgba(0,179,126,.35);transition:transform .15s,box-shadow .15s;margin-top:.5rem}
-.submit-btn:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(0,179,126,.45)}
-.form-hint{font-size:12px;color:var(--text3);text-align:center;margin-top:.75rem}
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+      border: 1.5px solid var(--border);
+      border-radius: 40px;
+      padding: 6px 16px 6px 8px;
+      font-size: 13px;
+      color: var(--text2);
+      font-weight: 500;
+      margin-bottom: 2.5rem;
+      box-shadow: var(--shadow)
+    }
 
-/* THANK YOU */
-.ty-inner{max-width:520px;width:100%;text-align:center}
-.ty-icon{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--teal),#00D68F);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:36px;box-shadow:0 12px 40px rgba(0,179,126,.35)}
-.ty-title{font-family:'Unbounded',sans-serif;font-size:26px;font-weight:700;margin-bottom:.75rem;letter-spacing:-.02em}
-.ty-sub{font-size:16px;color:var(--text2);line-height:1.65;margin-bottom:2rem;max-width:400px;margin-left:auto;margin-right:auto}
-.summary-card{background:white;border:1px solid var(--border);border-radius:var(--r);padding:1.25rem 1.5rem;text-align:left;box-shadow:var(--shadow)}
-.sum-row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px solid rgba(0,82,204,.07)}
-.sum-row:last-child{border-bottom:none}
-.sum-key{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
-.sum-val{font-size:14px;font-weight:600;color:var(--text);text-align:right;max-width:60%}
-</style>
+    .logo-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--c1), var(--c2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700
+    }
+
+    .lp-title {
+      font-family: 'Unbounded', sans-serif;
+      font-size: clamp(26px, 5vw, 46px);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+      letter-spacing: -.02em
+    }
+
+    .lp-title span {
+      background: linear-gradient(90deg, var(--c1), var(--c2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .lp-sub {
+      font-size: 17px;
+      color: var(--text2);
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto
+    }
+
+    .stat-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 2.5rem
+    }
+
+    @media(max-width:560px) {
+      .stat-cards {
+        grid-template-columns: 1fr
+      }
+
+      .opts-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .sc {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 1.1rem 1.1rem .9rem;
+      text-align: left;
+      box-shadow: var(--shadow);
+      transition: transform .2s, box-shadow .2s
+    }
+
+    .sc:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg)
+    }
+
+    .sc-num {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 21px;
+      font-weight: 700;
+      color: var(--c1);
+      line-height: 1.1;
+      margin-bottom: .35rem
+    }
+
+    .sc-desc {
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.45
+    }
+
+    .sc-desc b {
+      color: var(--text);
+      font-weight: 600
+    }
+
+    .sc-src {
+      font-size: 10px;
+      color: var(--text3);
+      margin-top: .5rem
+    }
+
+    .start-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--c1) 0%, #0066FF 100%);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 18px 40px;
+      font-size: 17px;
+      font-weight: 600;
+      font-family: 'Golos Text', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 8px 32px rgba(0, 82, 204, .35);
+      transition: transform .15s, box-shadow .15s;
+      letter-spacing: -.01em
+    }
+
+    .start-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 40px rgba(0, 82, 204, .45)
+    }
+
+    .start-btn .arrow {
+      width: 28px;
+      height: 28px;
+      background: rgba(255, 255, 255, .2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: transform .2s
+    }
+
+    .start-btn:hover .arrow {
+      transform: translateX(3px)
+    }
+
+    .lp-note {
+      font-size: 12px;
+      color: var(--text3);
+      margin-top: 1rem
+    }
+
+    /* ── QUIZ HEADER ── */
+    .qheader {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(239, 243, 255, .88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: .9rem 1.5rem
+    }
+
+    .qheader-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 1rem
+    }
+
+    .step-counter {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--c1);
+      white-space: nowrap;
+      flex-shrink: 0
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 6px;
+      background: rgba(0, 82, 204, .12);
+      border-radius: 3px;
+      overflow: hidden
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--c1), var(--c2));
+      border-radius: 3px;
+      transition: width .5s cubic-bezier(.22, 1, .36, 1)
+    }
+
+    .qbody {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 2.5rem 1.25rem 3rem
+    }
+
+    .qbody-inner {
+      max-width: 720px;
+      width: 100%
+    }
+
+    .step-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--c1);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: .5rem
+    }
+
+    .step-q {
+      font-family: 'Unbounded', sans-serif;
+      font-size: clamp(19px, 3.5vw, 26px);
+      font-weight: 600;
+      line-height: 1.25;
+      margin-bottom: 1.75rem;
+      color: var(--text);
+      letter-spacing: -.02em
+    }
+
+    /* GRID OPTIONS (step 1) */
+    .opts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px
+    }
+
+    .opt {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: var(--r);
+      padding: 1.1rem 1rem 1rem;
+      cursor: pointer;
+      text-align: left;
+      transition: all .18s cubic-bezier(.22, 1, .36, 1);
+      position: relative;
+      overflow: hidden
+    }
+
+    .opt:hover {
+      border-color: rgba(0, 82, 204, .35);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(0, 82, 204, .13)
+    }
+
+    .opt.sel {
+      border-color: var(--c1);
+      box-shadow: 0 0 0 3px rgba(0, 82, 204, .14), 0 8px 28px rgba(0, 82, 204, .18)
+    }
+
+    .opt-check {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: transparent;
+      transition: all .18s;
+      font-weight: 700
+    }
+
+    .opt.sel .opt-check {
+      background: var(--c1);
+      border-color: var(--c1);
+      color: white
+    }
+
+    .opt-icon {
+      font-size: 26px;
+      margin-bottom: .6rem;
+      display: block
+    }
+
+    .opt-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.3;
+      padding-right: 28px
+    }
+
+    .opt-sub {
+      font-size: 12px;
+      color: var(--text2);
+      margin-top: .3rem;
+      line-height: 1.4
+    }
+
+    /* LIST OPTIONS (steps 2,3) */
+    .opts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .opt-row {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: var(--r);
+      padding: 1rem 1.1rem;
+      cursor: pointer;
+      text-align: left;
+      transition: all .18s cubic-bezier(.22, 1, .36, 1);
+      display: flex;
+      align-items: center;
+      gap: 1rem
+    }
+
+    .opt-row:hover {
+      border-color: rgba(0, 82, 204, .35);
+      transform: translateX(4px);
+      box-shadow: 0 6px 20px rgba(0, 82, 204, .1)
+    }
+
+    .opt-row.sel {
+      border-color: var(--c1);
+      box-shadow: 0 0 0 3px rgba(0, 82, 204, .14)
+    }
+
+    .opt-row-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      transition: background .18s
+    }
+
+    .opt-row.sel .opt-row-icon {
+      background: linear-gradient(135deg, rgba(0, 82, 204, .08), rgba(0, 198, 251, .08))
+    }
+
+    .opt-row-txt {
+      flex: 1
+    }
+
+    .opt-row-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text)
+    }
+
+    .opt-row-sub {
+      font-size: 12px;
+      color: var(--text2);
+      margin-top: 2px
+    }
+
+    .opt-row-check {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: transparent;
+      transition: all .18s;
+      font-weight: 700;
+      flex-shrink: 0
+    }
+
+    .opt-row.sel .opt-row-check {
+      background: var(--c1);
+      border-color: var(--c1);
+      color: white
+    }
+
+    /* REACTION */
+    .reaction {
+      margin-top: 1.25rem;
+      background: linear-gradient(135deg, rgba(0, 82, 204, .05), rgba(0, 198, 251, .07));
+      border: 1.5px solid rgba(0, 82, 204, .15);
+      border-radius: var(--r);
+      padding: 1.1rem 1.25rem;
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.65;
+      display: none
+    }
+
+    .reaction.show {
+      display: block;
+      animation: fadeUp .3s both
+    }
+
+    .reaction-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--c1);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: .4rem;
+      display: block
+    }
+
+    .reaction-big {
+      font-family: 'Unbounded', sans-serif;
+      font-size: clamp(20px, 4vw, 28px);
+      font-weight: 700;
+      color: var(--c1);
+      display: block;
+      margin: .4rem 0 .3rem;
+      line-height: 1.1
+    }
+
+    .reaction p {
+      margin-top: .3rem
+    }
+
+    .reaction-src {
+      font-size: 10px;
+      color: var(--text3);
+      margin-top: .6rem;
+      display: block
+    }
+
+    /* NEXT BUTTON */
+    .next-wrap {
+      margin-top: 1.75rem
+    }
+
+    .next-btn {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--c1), #0066FF);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 28px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: 'Golos Text', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(0, 82, 204, .3);
+      transition: transform .15s, box-shadow .15s;
+      animation: fadeUp .3s both
+    }
+
+    .next-btn.show {
+      display: inline-flex
+    }
+
+    .next-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(0, 82, 204, .4)
+    }
+
+    .next-btn .arr {
+      width: 24px;
+      height: 24px;
+      background: rgba(255, 255, 255, .2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      transition: transform .2s
+    }
+
+    .next-btn:hover .arr {
+      transform: translateX(3px)
+    }
+
+    /* STEP 4 CONTACT */
+    .contact-box {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 2rem;
+      box-shadow: var(--shadow)
+    }
+
+    .channel-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 1.5rem
+    }
+
+    .ch-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'Golos Text', sans-serif;
+      color: var(--text2);
+      cursor: pointer;
+      transition: all .15s
+    }
+
+    .ch-btn:hover {
+      border-color: var(--c1);
+      color: var(--c1);
+      background: rgba(0, 82, 204, .05)
+    }
+
+    .ch-btn.sel {
+      border-color: var(--c1);
+      color: var(--c1);
+      background: rgba(0, 82, 204, .08)
+    }
+
+    .field {
+      margin-bottom: 1rem
+    }
+
+    .field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text2);
+      margin-bottom: .4rem;
+      text-transform: uppercase;
+      letter-spacing: .06em
+    }
+
+    .field input {
+      width: 100%;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 13px 16px;
+      font-size: 15px;
+      color: var(--text);
+      font-family: 'Golos Text', sans-serif;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s
+    }
+
+    .field input:focus {
+      border-color: var(--c1);
+      box-shadow: 0 0 0 4px rgba(0, 82, 204, .1);
+      background: white
+    }
+
+    .field input::placeholder {
+      color: var(--text3)
+    }
+
+    .submit-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--teal), #00D68F);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'Golos Text', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 8px 28px rgba(0, 179, 126, .35);
+      transition: transform .15s, box-shadow .15s;
+      margin-top: .5rem
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 36px rgba(0, 179, 126, .45)
+    }
+
+    .form-hint {
+      font-size: 12px;
+      color: var(--text3);
+      text-align: center;
+      margin-top: .75rem
+    }
+
+    /* THANK YOU */
+    .ty-inner {
+      max-width: 520px;
+      width: 100%;
+      text-align: center
+    }
+
+    .ty-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal), #00D68F);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 36px;
+      box-shadow: 0 12px 40px rgba(0, 179, 126, .35)
+    }
+
+    .ty-title {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: .75rem;
+      letter-spacing: -.02em
+    }
+
+    .ty-sub {
+      font-size: 16px;
+      color: var(--text2);
+      line-height: 1.65;
+      margin-bottom: 2rem;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto
+    }
+
+    .summary-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 1.25rem 1.5rem;
+      text-align: left;
+      box-shadow: var(--shadow)
+    }
+
+    .sum-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(0, 82, 204, .07)
+    }
+
+    .sum-row:last-child {
+      border-bottom: none
+    }
+
+    .sum-key {
+      font-size: 11px;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      font-weight: 600
+    }
+
+    .sum-val {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      text-align: right;
+      max-width: 60%
+    }
+  </style>
 </head>
+
 <body>
-<div class="mesh"></div>
-<div class="page">
+  <div class="mesh"></div>
+  <div class="page">
 
-<!-- LANDING -->
-<div class="screen active" id="scr-land">
-  <div class="lp-inner">
-    <div class="logo-badge"><div class="logo-dot">A</div>Avito · Строительство и ремонт</div>
-    <h1 class="lp-title">Узнайте, сколько клиентов<br><span>уходит к конкурентам</span></h1>
-    <p class="lp-sub">3 вопроса → персональный разбор вашей ниши с реальными цифрами по рынку 2025</p>
-    <div class="stat-cards">
-      <div class="sc">
-        <div class="sc-num">100–300 тыс. ₽</div>
-        <div class="sc-desc">в месяц уходит мимо при <b>0–2 заявках</b> в неделю</div>
-        <div class="sc-src">расчёт: 30–40 упущ. клиентов × средний чек</div>
-      </div>
-      <div class="sc">
-        <div class="sc-num">284 млн</div>
-        <div class="sc-desc">визитов на <b>Avito</b> в месяц</div>
-        <div class="sc-src">SimilarWeb, фев 2026</div>
-      </div>
-      <div class="sc">
-        <div class="sc-num">500–800 ₽</div>
-        <div class="sc-desc">заявка с Avito — <b>дешевле таргета</b> в 3–5 раз</div>
-        <div class="sc-src">360i.digital, 2026</div>
+    <!-- LANDING -->
+    <div class="screen active" id="scr-land">
+      <div class="lp-inner">
+
+        <h1 class="lp-title">Считаете, что клиентов хватает?<br><span>Посчитайте, сколько денег уходит мимо</span></h1>
+        <p class="lp-sub">Люди ищут мастеров на Avito — они платёжеспособны и готовы к сделке. 3 вопроса — и вы увидите,
+          сколько именно вы не зарабатываете прямо сейчас.</p>
+        <div class="stat-cards">
+          <div class="sc">
+            <div class="sc-num">100–300 тыс. ₽</div>
+            <div class="sc-desc">столько теряют те, кто не использует рекламу на Avito</div>
+            <div class="sc-src">расчёт на основе средних чеков по нишам, 2025</div>
+          </div>
+          <div class="sc">
+            <div class="sc-num">284 млн</div>
+            <div class="sc-desc">визитов на Avito в месяц — клиенты ищут Вас</div>
+            <div class="sc-src">SimilarWeb, фев 2026</div>
+          </div>
+          <div class="sc">
+            <div class="sc-num">500–800 ₽</div>
+            <div class="sc-desc">всего лишь столько стоит заявка с Avito — дешевле таргета в 3–5 раз</div>
+            <div class="sc-src">360i.digital, 2026</div>
+          </div>
+        </div>
+        <button class="start-btn" onclick="startQuiz()">Узнать, сколько я не зарабатываю <span
+            class="arrow">→</span></button>
+        <p class="lp-note">Бесплатно · Без регистрации · 2 минуты</p>
       </div>
     </div>
-    <button class="start-btn" onclick="startQuiz()">Узнать, сколько клиентов я теряю <span class="arrow">→</span></button>
-    <p class="lp-note">Бесплатно · Без регистрации · 2 минуты</p>
-  </div>
-</div>
 
-<!-- QUIZ -->
-<div class="quiz-screen" id="scr-quiz">
-  <div class="qheader">
-    <div class="qheader-inner">
-      <div class="step-counter" id="step-counter">Шаг 1 / 4</div>
-      <div class="progress-track"><div class="progress-fill" id="progress" style="width:25%"></div></div>
+    <!-- QUIZ -->
+    <div class="quiz-screen" id="scr-quiz">
+      <div class="qheader">
+        <div class="qheader-inner">
+          <div class="step-counter" id="step-counter">Шаг 1 / 4</div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progress" style="width:25%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="qbody">
+        <div class="qbody-inner">
+
+          <!-- ШАГ 1 -->
+          <div id="step-1">
+            <div class="step-label">Ниша</div>
+            <div class="step-q">Что именно вы делаете?</div>
+            <div class="opts-grid">
+              <button class="opt"
+                onclick="pickNiche(this,'Ремонт квартир/офисов','300 тыс. – 1 млн ₽','300 тыс. – 1 млн ₽ за объект','Не рекламируетесь на Avito — теряете от 300 тысяч рублей с каждого пропущенного объекта. Именно столько стоит один заказ на ремонт, который прямо сейчас уходит к тому, кто там есть.','vc.ru / mir-rem.ru, 2025')">
+                <div class="opt-check">✓</div><span class="opt-icon">🏠</span>
+                <div class="opt-title">Ремонт квартир / офисов под ключ</div>
+                <div class="opt-sub">средний чек за объект — 300 тыс. – 1 млн ₽</div>
+              </button>
+              <button class="opt"
+                onclick="pickNiche(this,'Электромонтаж','80–150 тыс. ₽ за объект','80–150 тыс. ₽ за объект','Без продвижения на Avito вы теряете от 80 тысяч рублей с каждого пропущенного объекта. Это деньги, которые уже сейчас зарабатывает тот, кого клиент нашёл первым.','kpl-electric.ru, 2025')">
+                <div class="opt-check">✓</div><span class="opt-icon">⚡</span>
+                <div class="opt-title">Электромонтаж</div>
+                <div class="opt-sub">средний чек за объект — 80–150 тыс. ₽</div>
+              </button>
+              <button class="opt"
+                onclick="pickNiche(this,'Сантехника','15–250 тыс. ₽ за объект','15–250 тыс. ₽ за объект','Каждый пропущенный заказ в сантехнике — от 15 до 250 тысяч рублей мимо. Клиент уже ищет мастера на Avito прямо сейчас — вопрос только в том, найдёт ли он вас.','redfiks.com / altprof.ru, 2025')">
+                <div class="opt-check">✓</div><span class="opt-icon">🔧</span>
+                <div class="opt-title">Сантехника</div>
+                <div class="opt-sub">средний чек за объект — 15–250 тыс. ₽</div>
+              </button>
+              <button class="opt"
+                onclick="pickNiche(this,'Отделочные работы','300–600 тыс. ₽ за объект','300–600 тыс. ₽ за объект','Один пропущенный заказ на отделку — от 300 тысяч рублей, которые достались другому. Без активного присутствия на Avito эти деньги уходят ежемесячно.','mir-rem.ru, 2025')">
+                <div class="opt-check">✓</div><span class="opt-icon">🪣</span>
+                <div class="opt-title">Отделочные работы</div>
+                <div class="opt-sub">средний чек за объект — 300–600 тыс. ₽</div>
+              </button>
+              <button class="opt"
+                onclick="pickNiche(this,'Строительство домов','от 1,5 млн ₽ за объект','от 1,5 млн ₽ за объект','Один пропущенный заказ на дом или баню — от 1,5 миллиона рублей. Эти деньги уже лежат на Avito и ждут того, кто правильно заявит о себе на площадке.','vc.ru, 2025')">
+                <div class="opt-check">✓</div><span class="opt-icon">🏗️</span>
+                <div class="opt-title">Строительство домов, бань</div>
+                <div class="opt-sub">средний чек за объект — от 1,5 млн ₽</div>
+              </button>
+              <button class="opt"
+                onclick="pickNiche(this,'Комплексно','500 тыс. – 1,5 млн ₽ за объект','500 тыс. – 1,5 млн ₽ за объект','Один пропущенный заказ на ремонт под ключ — от 500 тысяч до 1,5 миллиона рублей. Без грамотного продвижения на Avito вы отдаёте эти деньги конкурентам каждый месяц.','vc.ru / 360i.digital, 2025–2026')">
+                <div class="opt-check">✓</div><span class="opt-icon">🔑</span>
+                <div class="opt-title">Комплексно: ремонт + электрика + сантехника</div>
+                <div class="opt-sub">средний чек за объект — 500 тыс. – 1,5 млн ₽</div>
+              </button>
+            </div>
+            <div class="reaction" id="react-1"></div>
+            <div class="next-wrap"><button class="next-btn" id="next-1" onclick="goStep(2)">Следующий вопрос <span
+                  class="arr">→</span></button></div>
+          </div>
+
+          <!-- ШАГ 2 -->
+          <div id="step-2" style="display:none">
+            <div class="step-label">Текущие заявки</div>
+            <div class="step-q">Сколько заявок вы получаете сейчас?</div>
+            <div class="opts-list">
+              <button class="opt-row" onclick="pickLeads(this,'1–2')">
+                <div class="opt-row-icon">📉</div>
+                <div class="opt-row-txt">
+                  <div class="opt-row-title">1–2 в неделю или вообще нет</div>
+                </div>
+                <div class="opt-row-check">✓</div>
+              </button>
+              <button class="opt-row" onclick="pickLeads(this,'3–5')">
+                <div class="opt-row-icon">📊</div>
+                <div class="opt-row-txt">
+                  <div class="opt-row-title">3–5 в неделю, но нестабильно</div>
+                </div>
+                <div class="opt-row-check">✓</div>
+              </button>
+              <button class="opt-row" onclick="pickLeads(this,'5–10')">
+                <div class="opt-row-icon">📈</div>
+                <div class="opt-row-txt">
+                  <div class="opt-row-title">5–10 в неделю, хочу больше</div>
+                </div>
+                <div class="opt-row-check">✓</div>
+              </button>
+              <button class="opt-row" onclick="pickLeads(this,'сарафан')">
+                <div class="opt-row-icon">📢</div>
+                <div class="opt-row-txt">
+                  <div class="opt-row-title">Только сарафанное радио</div>
+                </div>
+                <div class="opt-row-check">✓</div>
+              </button>
+            </div>
+            <div class="reaction" id="react-2"></div>
+            <div class="next-wrap"><button class="next-btn" id="next-2" onclick="goStep(3)">Следующий вопрос <span
+                  class="arr">→</span></button></div>
+          </div>
+
+          <!-- ШАГ 3 -->
+          <div id="step-3" style="display:none">
+            <div class="step-label">Город</div>
+            <div class="step-q">В каком городе работаете?</div>
+            <div class="opts-list">
+              <button class="opt-row"
+                onclick="pickCity(this,'Москва','Москва — самый платёжеспособный рынок. Люди здесь привыкли платить за качество и ищут мастеров на Avito ежедневно. Один заказ может перекрыть месяц работы.')">
+                <div class="opt-row-icon">🏙️</div>
+                <div class="opt-row-txt">
+                  <div class="opt-row-title">Москва</div>
+                  <div class="opt-row-sub">самый платёжеспособный рынок страны</div>
+                </div>
+                <div class="opt-row-check">✓</div>
+              </button>
+              <button class="opt-row"
+                onclick="pickCity(this,'Санкт-Петербург','Петербург — второй по деньгам рынок в стране. Средний чек высокий, клиенты платёжеспособны и активно ищут мастеров онлайн.')">
+                <div class="opt-row-icon">🌉</div>
+                <div class="opt-row-txt">
+                  <div class="opt-row-title">Санкт-Петербург</div>
+                  <div class="opt-row-sub">высокий спрос · высокий средний чек</div>
+                </div>
+                <div class="opt-row-check">✓</div>
+              </button>
+              <button class="opt-row"
+                onclick="pickCity(this,'Город 500 000 – 1 млн','Спрос устойчивый, а мастеров с нормальным Avito-присутствием — единицы. Это значит, что деньги здесь лежат и ждут тех, кто придёт первым.')">
+                <div class="opt-row-icon">🏘️</div>
+                <div class="opt-row-txt">
+                  <div class="opt-row-title">Город 500 000 – 1 млн</div>
+                  <div class="opt-row-sub">Новосибирск, Екатеринбург, Казань и др.</div>
+                </div>
+                <div class="opt-row-check">✓</div>
+              </button>
+              <button class="opt-row"
+                onclick="pickCity(this,'Город до 500 000','Небольшой город — значит меньше тех, кто уже занял Avito. Первый, кто зайдёт системно, забирает рынок. Это реальный шанс.')">
+                <div class="opt-row-icon">🏡</div>
+                <div class="opt-row-txt">
+                  <div class="opt-row-title">Город до 500 000</div>
+                  <div class="opt-row-sub">мастеров с Avito почти нет — рынок свободен</div>
+                </div>
+                <div class="opt-row-check">✓</div>
+              </button>
+              <button class="opt-row"
+                onclick="pickCity(this,'Малый город','Люди в малых городах тоже ищут мастеров онлайн — и почти никто из местных там не представлен. Кто первый — тот и зарабатывает.')">
+                <div class="opt-row-icon">🛖</div>
+                <div class="opt-row-txt">
+                  <div class="opt-row-title">Малый город / районный центр</div>
+                </div>
+                <div class="opt-row-check">✓</div>
+              </button>
+            </div>
+            <div class="reaction" id="react-3"></div>
+            <div class="next-wrap"><button class="next-btn" id="next-3" onclick="goStep(4)">Получить разбор <span
+                  class="arr">→</span></button></div>
+          </div>
+
+          <!-- ШАГ 4 -->
+          <div id="step-4" style="display:none">
+            <div class="step-label">Контакт</div>
+            <div class="step-q">Куда прислать разбор?</div>
+            <div class="contact-box">
+              <div class="channel-group">
+                <button class="ch-btn" id="ch-tg" onclick="pickChannel('tg')">✈️ Telegram</button>
+                <button class="ch-btn" id="ch-max" onclick="pickChannel('max')">💬 MAX</button>
+                <button class="ch-btn" id="ch-call" onclick="pickChannel('call')">📞 Позвоните мне</button>
+              </div>
+              <div class="field">
+                <label>Ваше имя</label>
+                <input type="text" id="inp-name" placeholder="Например, Алексей">
+              </div>
+              <div class="field">
+                <label>Контакт</label>
+                <input type="text" id="inp-contact" placeholder="@username или номер телефона">
+              </div>
+              <button class="submit-btn" onclick="submitQuiz()">📩 Получить персональный разбор</button>
+              <p class="form-hint">Ответим в течение 2–4 часов в рабочее время</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="qbody">
-    <div class="qbody-inner">
 
-      <!-- ШАГ 1 -->
-      <div id="step-1">
-        <div class="step-label">Ниша</div>
-        <div class="step-q">Что именно вы делаете?</div>
-        <div class="opts-grid">
-          <button class="opt" onclick="pickNiche(this,'Ремонт квартир/офисов','8 000–15 000 ₽/м²','300 тыс. – 1 млн ₽','От 8 000 до 25 000 ₽/м² в зависимости от класса. Средний чек за квартиру 50 м² — от 400 тыс. ₽. Рынок вырос на 12% за 2025 год.','vc.ru / mir-rem.ru, 2025')">
-            <div class="opt-check">✓</div><span class="opt-icon">🏠</span>
-            <div class="opt-title">Ремонт квартир / офисов под ключ</div>
-            <div class="opt-sub">косметический от 8 000 ₽/м² · капитальный от 15 000 ₽/м²</div>
-          </button>
-          <button class="opt" onclick="pickNiche(this,'Электромонтаж','~1 600 ₽/м² разводка','80–150 тыс. ₽ за квартиру','Выезд и диагностика: 1 000–2 000 ₽. Разводка квартиры 50 м² под ключ — от 80 000 ₽. Рынок стабильный, спрос круглогодичный.','kpl-electric.ru, 2025')">
-            <div class="opt-check">✓</div><span class="opt-icon">⚡</span>
-            <div class="opt-title">Электромонтаж</div>
-            <div class="opt-sub">выезд от 1 000–2 000 ₽ · разводка ~1 600 ₽/м²</div>
-          </button>
-          <button class="opt" onclick="pickNiche(this,'Сантехника','~2 500 ₽ простой вызов','15–250 тыс. ₽','Средний вызов в Москве 2025: ~2 500 ₽ (засор, смеситель). Ремонт санузла под ключ: от 120 000 до 250 000 ₽ в среднем.','redfiks.com / altprof.ru, 2025')">
-            <div class="opt-check">✓</div><span class="opt-icon">🔧</span>
-            <div class="opt-title">Сантехника</div>
-            <div class="opt-sub">вызов ~2 500 ₽ · санузел под ключ от 120 000 ₽</div>
-          </button>
-          <button class="opt" onclick="pickNiche(this,'Отделочные работы','от 6 000 ₽/м²','300–600 тыс. ₽ за квартиру','Черновая отделка от 6 000 ₽/м², капитальная от 10 000 ₽/м². Квартира 50 м² — от 300 тыс. ₽ без материалов.','mir-rem.ru, 2025')">
-            <div class="opt-check">✓</div><span class="opt-icon">🪣</span>
-            <div class="opt-title">Отделочные работы</div>
-            <div class="opt-sub">от 6 000 ₽/м² · под ключ от 10 000 ₽/м²</div>
-          </button>
-          <button class="opt" onclick="pickNiche(this,'Строительство домов','от 25 000 ₽/м²','от 1,5 млн ₽','Строительство дома 60 м² — от 1,5–3 млн ₽. Конкуренция на Avito ниже, но цикл сделки длиннее — карточка должна закрывать на замер.','vc.ru, 2025')">
-            <div class="opt-check">✓</div><span class="opt-icon">🏗️</span>
-            <div class="opt-title">Строительство домов, бань</div>
-            <div class="opt-sub">от 25 000 ₽/м² · сделка от 1,5 млн ₽</div>
-          </button>
-          <button class="opt" onclick="pickNiche(this,'Комплексно','весь спектр услуг','500 тыс. – 1,5 млн ₽','Самая конкурентная ниша. Средний чек вырос на 12% в 2025 году. Системное продвижение — единственный выход.','vc.ru / 360i.digital, 2025–2026')">
-            <div class="opt-check">✓</div><span class="opt-icon">🔑</span>
-            <div class="opt-title">Комплексно: ремонт + электрика + сантехника</div>
-            <div class="opt-sub">чек от 500 тыс. ₽ за квартиру</div>
-          </button>
-        </div>
-        <div class="reaction" id="react-1"></div>
-        <div class="next-wrap"><button class="next-btn" id="next-1" onclick="goStep(2)">Следующий вопрос <span class="arr">→</span></button></div>
+    <!-- THANK YOU -->
+    <div class="screen" id="scr-ty">
+      <div class="ty-inner">
+        <div class="ty-icon">✅</div>
+        <h2 class="ty-title">Заявка принята!</h2>
+        <p class="ty-sub">Готовим персональный разбор по вашей нише.<br>Свяжемся в течение 2–4 часов.</p>
+        <div class="summary-card" id="summary"></div>
       </div>
-
-      <!-- ШАГ 2 -->
-      <div id="step-2" style="display:none">
-        <div class="step-label">Текущие заявки</div>
-        <div class="step-q">Сколько заявок вы получаете сейчас?</div>
-        <div class="opts-list">
-          <button class="opt-row" onclick="pickLeads(this,'0–2')">
-            <div class="opt-row-icon">📉</div>
-            <div class="opt-row-txt"><div class="opt-row-title">0–2 в неделю или вообще нет</div></div>
-            <div class="opt-row-check">✓</div>
-          </button>
-          <button class="opt-row" onclick="pickLeads(this,'3–5')">
-            <div class="opt-row-icon">📊</div>
-            <div class="opt-row-txt"><div class="opt-row-title">3–5 в неделю, но нестабильно</div></div>
-            <div class="opt-row-check">✓</div>
-          </button>
-          <button class="opt-row" onclick="pickLeads(this,'5–10')">
-            <div class="opt-row-icon">📈</div>
-            <div class="opt-row-txt"><div class="opt-row-title">5–10 в неделю, хочу больше</div></div>
-            <div class="opt-row-check">✓</div>
-          </button>
-          <button class="opt-row" onclick="pickLeads(this,'сарафан')">
-            <div class="opt-row-icon">📢</div>
-            <div class="opt-row-txt"><div class="opt-row-title">Только сарафанное радио</div></div>
-            <div class="opt-row-check">✓</div>
-          </button>
-        </div>
-        <div class="reaction" id="react-2"></div>
-        <div class="next-wrap"><button class="next-btn" id="next-2" onclick="goStep(3)">Следующий вопрос <span class="arr">→</span></button></div>
-      </div>
-
-      <!-- ШАГ 3 -->
-      <div id="step-3" style="display:none">
-        <div class="step-label">Город</div>
-        <div class="step-q">В каком городе работаете?</div>
-        <div class="opts-list">
-          <button class="opt-row" onclick="pickCity(this,'Москва','Конкуренция максимальная. Стоимость заявки: 500–800 ₽. Побеждает системное продвижение, а не разовые размещения.')">
-            <div class="opt-row-icon">🏙️</div>
-            <div class="opt-row-txt"><div class="opt-row-title">Москва</div><div class="opt-row-sub">макс. конкуренция · макс. спрос</div></div>
-            <div class="opt-row-check">✓</div>
-          </button>
-          <button class="opt-row" onclick="pickCity(this,'Санкт-Петербург','Второй по объёму рынок. Высокий средний чек, платёжеспособная аудитория. Конкуренция чуть ниже Москвы.')">
-            <div class="opt-row-icon">🌉</div>
-            <div class="opt-row-txt"><div class="opt-row-title">Санкт-Петербург</div><div class="opt-row-sub">высокий спрос · высокий средний чек</div></div>
-            <div class="opt-row-check">✓</div>
-          </button>
-          <button class="opt-row" onclick="pickCity(this,'Город 500 000 – 1 млн','Конкуренция в 2–3 раза ниже московской. Попасть в топ реально без больших бюджетов с правильной карточкой.')">
-            <div class="opt-row-icon">🏘️</div>
-            <div class="opt-row-txt"><div class="opt-row-title">Город 500 000 – 1 млн</div><div class="opt-row-sub">Новосибирск, Екатеринбург, Казань и др.</div></div>
-            <div class="opt-row-check">✓</div>
-          </button>
-          <button class="opt-row" onclick="pickCity(this,'Город до 500 000','Меньше объявлений — проще занять топ. Акцент на отзывах и локальных ключевых словах.')">
-            <div class="opt-row-icon">🏡</div>
-            <div class="opt-row-txt"><div class="opt-row-title">Город до 500 000</div><div class="opt-row-sub">низкая конкуренция · просто попасть в топ</div></div>
-            <div class="opt-row-check">✓</div>
-          </button>
-          <button class="opt-row" onclick="pickCity(this,'Малый город','Конкурентов мало. Клиент выбирает по отзывам. Одна сильная карточка закрывает весь рынок.')">
-            <div class="opt-row-icon">🛖</div>
-            <div class="opt-row-txt"><div class="opt-row-title">Малый город / районный центр</div></div>
-            <div class="opt-row-check">✓</div>
-          </button>
-        </div>
-        <div class="reaction" id="react-3"></div>
-        <div class="next-wrap"><button class="next-btn" id="next-3" onclick="goStep(4)">Получить разбор <span class="arr">→</span></button></div>
-      </div>
-
-      <!-- ШАГ 4 -->
-      <div id="step-4" style="display:none">
-        <div class="step-label">Контакт</div>
-        <div class="step-q">Куда прислать разбор?</div>
-        <div class="contact-box">
-          <div class="channel-group">
-            <button class="ch-btn" id="ch-tg" onclick="pickChannel('tg')">✈️ Telegram</button>
-            <button class="ch-btn" id="ch-max" onclick="pickChannel('max')">💬 MAX</button>
-            <button class="ch-btn" id="ch-call" onclick="pickChannel('call')">📞 Позвоните мне</button>
-          </div>
-          <div class="field">
-            <label>Ваше имя</label>
-            <input type="text" id="inp-name" placeholder="Например, Алексей">
-          </div>
-          <div class="field">
-            <label>Контакт</label>
-            <input type="text" id="inp-contact" placeholder="@username или номер телефона">
-          </div>
-          <button class="submit-btn" onclick="submitQuiz()">📩 Получить персональный разбор</button>
-          <p class="form-hint">Ответим в течение 2–4 часов в рабочее время</p>
-        </div>
-      </div>
-
     </div>
+
   </div>
-</div>
+  <script>
+    var S = { niche: '', check: '', checkFull: '', insight: '', src: '', leads: '', city: '', channel: '' };
 
-<!-- THANK YOU -->
-<div class="screen" id="scr-ty">
-  <div class="ty-inner">
-    <div class="ty-icon">✅</div>
-    <h2 class="ty-title">Заявка принята!</h2>
-    <p class="ty-sub">Готовим персональный разбор по вашей нише.<br>Свяжемся в течение 2–4 часов.</p>
-    <div class="summary-card" id="summary"></div>
-  </div>
-</div>
+    function showScreen(id) {
+      document.querySelectorAll('.screen,.quiz-screen').forEach(function (s) { s.classList.remove('active'); s.style.display = ''; });
+      var el = document.getElementById(id);
+      el.style.display = 'flex';
+      setTimeout(function () { el.classList.add('active'); }, 10);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-</div>
-<script>
-var S={niche:'',check:'',checkFull:'',insight:'',src:'',leads:'',city:'',channel:''};
+    function startQuiz() { showScreen('scr-quiz'); }
 
-function showScreen(id){
-  document.querySelectorAll('.screen,.quiz-screen').forEach(function(s){s.classList.remove('active');s.style.display='';});
-  var el=document.getElementById(id);
-  el.style.display='flex';
-  setTimeout(function(){el.classList.add('active');},10);
-  window.scrollTo({top:0,behavior:'smooth'});
-}
+    function goStep(n) {
+      for (var i = 1; i <= 4; i++) {
+        var s = document.getElementById('step-' + i);
+        if (s) s.style.display = i === n ? 'block' : 'none';
+      }
+      document.getElementById('step-counter').textContent = 'Шаг ' + n + ' / 4';
+      document.getElementById('progress').style.width = (n / 4 * 100) + '%';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-function startQuiz(){showScreen('scr-quiz');}
+    function pickNiche(btn, niche, check, checkFull, insight, src) {
+      S.niche = niche; S.check = check; S.checkFull = checkFull; S.insight = insight; S.src = src;
+      document.querySelectorAll('#step-1 .opt').forEach(function (b) { b.classList.remove('sel'); });
+      btn.classList.add('sel');
+      var r = document.getElementById('react-1');
+      r.innerHTML = '<span class="reaction-label">Ниша: ' + niche + '</span>'
+        + '<span class="reaction-big">' + checkFull + '</span>'
+        + '<p>' + insight + '</p>'
+        + '<span class="reaction-src">Источник: ' + src + '</span>';
+      r.classList.add('show');
+      document.getElementById('next-1').classList.add('show');
+    }
 
-function goStep(n){
-  for(var i=1;i<=4;i++){
-    var s=document.getElementById('step-'+i);
-    if(s) s.style.display=i===n?'block':'none';
-  }
-  document.getElementById('step-counter').textContent='Шаг '+n+' / 4';
-  document.getElementById('progress').style.width=(n/4*100)+'%';
-  window.scrollTo({top:0,behavior:'smooth'});
-}
+    function pickLeads(btn, leads) {
+      S.leads = leads;
+      document.querySelectorAll('#step-2 .opt-row').forEach(function (b) { b.classList.remove('sel'); });
+      btn.classList.add('sel');
+      var r = document.getElementById('react-2');
+      var big, text, src;
+      if (leads === '1–2') {
+        big = 'потеря: от ' + S.checkFull + ' в месяц';
+        text = 'Только на недополученных заказах. Вы фактически не используете Avito как рекламный канал. А ваши клиенты ищут вас там, не находят — и уходят к конкурентам.';
+        src = 'расчёт на основе средних чеков по нишам, 2025';
+      } else if (leads === '3–5') {
+        big = 'минус 30–40% от возможного дохода';
+        text = 'Нестабильность = Вы не можете прогнозировать выручку. Сегодня заявки есть, завтра — тишина. Каждый «провал» стоит 2–3 заказа.';
+        src = '360i.digital, 2026';
+      } else if (leads === '5–10') {
+        big = 'вы теряете столько, сколько зарабатываете';
+        text = 'Вы близки к системным продажам, но без Avito потолок — эти же 5–10 заявок. Конкуренты на Avito забирают ровно столько же сверху.';
+        src = '360i.digital, 2026';
+      } else {
+        big = '1–3 заказа каждый день — не к вам';
+        text = 'Люди стали считать деньги и ищут мастеров сами — через Avito. Сарафан не масштабируется и не предсказуем. Каждый день без Avito — это заказы, которые уходят не к вам.';
+        src = 'SimilarWeb, февраль 2026';
+      }
+      r.innerHTML = '<span class="reaction-label">Что это значит для вас</span>'
+        + '<span class="reaction-big">' + big + '</span>'
+        + '<p>' + text + '</p>'
+        + '<span class="reaction-src">' + src + '</span>';
+      r.classList.add('show');
+      document.getElementById('next-2').classList.add('show');
+    }
 
-function pickNiche(btn,niche,check,checkFull,insight,src){
-  S.niche=niche;S.check=check;S.checkFull=checkFull;S.insight=insight;S.src=src;
-  document.querySelectorAll('#step-1 .opt').forEach(function(b){b.classList.remove('sel');});
-  btn.classList.add('sel');
-  var r=document.getElementById('react-1');
-  r.innerHTML='<span class="reaction-label">Ниша: '+niche+'</span>'
-    +'<span class="reaction-big">'+checkFull+'</span>'
-    +'<p>'+insight+'</p>'
-    +'<span class="reaction-src">Источник: '+src+'</span>';
-  r.classList.add('show');
-  document.getElementById('next-1').classList.add('show');
-}
+    function pickCity(btn, city, note) {
+      S.city = city;
+      document.querySelectorAll('#step-3 .opt-row').forEach(function (b) { b.classList.remove('sel'); });
+      btn.classList.add('sel');
+      var r = document.getElementById('react-3');
+      r.innerHTML = '<span class="reaction-label">' + city + '</span>'
+        + '<p>' + note + '</p>'
+        + '<span class="reaction-src">360i.digital, 2026</span>';
+      r.classList.add('show');
+      document.getElementById('next-3').classList.add('show');
+    }
 
-function pickLeads(btn,leads){
-  S.leads=leads;
-  document.querySelectorAll('#step-2 .opt-row').forEach(function(b){b.classList.remove('sel');});
-  btn.classList.add('sel');
-  var r=document.getElementById('react-2');
-  var big,text,src;
-  if(leads==='0–2'){
-    big='100–300 тыс. ₽ / мес';
-    text='уходит мимо — это 30–40 потенциальных клиентов × ваш средний чек. Вы в нижних 70–80% рынка — там делят остатки.';
-    src='расчёт на основе данных 360i.digital, 2026';
-  } else if(leads==='3–5'){
-    big='до 50% выручки';
-    text='вы упускаете ежемесячно. Нестабильность — признак отсутствия системы. Объявления «протухают» за 1–2 месяца без обновлений.';
-    src='360i.digital, 2026';
-  } else if(leads==='5–10'){
-    big='×2–3 к потоку';
-    text='дают правильная структура карточек и аналитика по дням недели — без роста бюджета.';
-    src='360i.digital, 2026';
-  } else {
-    big='284 млн визитов / мес';
-    text='на Avito — часть из них ищет вашу услугу прямо сейчас и находит конкурентов. Сарафан не масштабируется.';
-    src='SimilarWeb, февраль 2026';
-  }
-  r.innerHTML='<span class="reaction-label">Упущенная выручка</span>'
-    +'<span class="reaction-big">'+big+'</span>'
-    +'<p>'+text+'</p>'
-    +'<span class="reaction-src">'+src+'</span>';
-  r.classList.add('show');
-  document.getElementById('next-2').classList.add('show');
-}
+    function pickChannel(ch) {
+      S.channel = ch;
+      ['tg', 'max', 'call'].forEach(function (c) {
+        var el = document.getElementById('ch-' + c);
+        if (el) el.classList.remove('sel');
+      });
+      document.getElementById('ch-' + ch).classList.add('sel');
+      var ph = ch === 'tg' ? '@username в Telegram' : ch === 'max' ? 'Ник или номер в MAX' : 'Номер телефона';
+      document.getElementById('inp-contact').placeholder = ph;
+    }
 
-function pickCity(btn,city,note){
-  S.city=city;
-  document.querySelectorAll('#step-3 .opt-row').forEach(function(b){b.classList.remove('sel');});
-  btn.classList.add('sel');
-  var r=document.getElementById('react-3');
-  r.innerHTML='<span class="reaction-label">'+city+'</span>'
-    +'<p>'+note+'</p>'
-    +'<span class="reaction-src">360i.digital, 2026</span>';
-  r.classList.add('show');
-  document.getElementById('next-3').classList.add('show');
-}
-
-function pickChannel(ch){
-  S.channel=ch;
-  ['tg','max','call'].forEach(function(c){
-    var el=document.getElementById('ch-'+c);
-    if(el) el.classList.remove('sel');
-  });
-  document.getElementById('ch-'+ch).classList.add('sel');
-  var ph=ch==='tg'?'@username в Telegram':ch==='max'?'Ник или номер в MAX':'Номер телефона';
-  document.getElementById('inp-contact').placeholder=ph;
-}
-
-function submitQuiz(){
-  var name=document.getElementById('inp-name').value.trim();
-  var contact=document.getElementById('inp-contact').value.trim();
-  if(!name||!contact){
-    document.getElementById('inp-contact').style.borderColor='var(--red)';
-    document.getElementById('inp-contact').focus();
-    return;
-  }
-  // === ОТПРАВКА: вставь свой webhook / fetch ===
-  // fetch('/submit', { method:'POST', headers:{'Content-Type':'application/json'},
-  //   body: JSON.stringify({ name, contact, channel:S.channel, niche:S.niche, leads:S.leads, city:S.city }) })
-  var chL=S.channel==='tg'?'Telegram':S.channel==='max'?'MAX':'Звонок';
-  document.getElementById('summary').innerHTML=
-    '<div class="sum-row"><span class="sum-key">Ниша</span><span class="sum-val">'+(S.niche||'—')+'</span></div>'
-    +'<div class="sum-row"><span class="sum-key">Средний чек</span><span class="sum-val">'+(S.check||'—')+'</span></div>'
-    +'<div class="sum-row"><span class="sum-key">Заявок сейчас</span><span class="sum-val">'+(S.leads||'—')+' / нед</span></div>'
-    +'<div class="sum-row"><span class="sum-key">Город</span><span class="sum-val">'+(S.city||'—')+'</span></div>'
-    +'<div class="sum-row"><span class="sum-key">Связь</span><span class="sum-val">'+chL+' · '+contact+'</span></div>';
-  showScreen('scr-ty');
-}
-</script>
+    function submitQuiz() {
+      var name = document.getElementById('inp-name').value.trim();
+      var contact = document.getElementById('inp-contact').value.trim();
+      if (!name || !contact) {
+        document.getElementById('inp-contact').style.borderColor = 'var(--red)';
+        document.getElementById('inp-contact').focus();
+        return;
+      }
+      // === ОТПРАВКА: вставь свой webhook / fetch ===
+      // fetch('/submit', { method:'POST', headers:{'Content-Type':'application/json'},
+      //   body: JSON.stringify({ name, contact, channel:S.channel, niche:S.niche, leads:S.leads, city:S.city }) })
+      var chL = S.channel === 'tg' ? 'Telegram' : S.channel === 'max' ? 'MAX' : 'Звонок';
+      document.getElementById('summary').innerHTML =
+        '<div class="sum-row"><span class="sum-key">Ниша</span><span class="sum-val">' + (S.niche || '—') + '</span></div>'
+        + '<div class="sum-row"><span class="sum-key">Средний чек</span><span class="sum-val">' + (S.check || '—') + '</span></div>'
+        + '<div class="sum-row"><span class="sum-key">Заявок сейчас</span><span class="sum-val">' + (S.leads || '—') + ' / нед</span></div>'
+        + '<div class="sum-row"><span class="sum-key">Город</span><span class="sum-val">' + (S.city || '—') + '</span></div>'
+        + '<div class="sum-row"><span class="sum-key">Связь</span><span class="sum-val">' + chL + ' · ' + contact + '</span></div>';
+      showScreen('scr-ty');
+    }
+  </script>
 </body>
+
 </html>
